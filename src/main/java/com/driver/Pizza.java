@@ -2,53 +2,30 @@ package com.driver;
 
 public class Pizza {
 
-    //prices
-    static int nonVegPizzaBasePrice = 400;
-    static int vegPizzaBasePrice = 300;
-
-    static int takeAwayPrice = 20;
-    private int cheesePrice;
-    private int toppingPrice;
-
-
-    //flags
-    private boolean isCheeseAdded;
-    private boolean isToppingAdded;
-    private Boolean isVeg;
-    private boolean isTakeAway;
-    ToppingsAdder toppingsAdder;
-    CheeseAdder cheeseAdder;
-    BillGenerator billGenerator;
     private int price;
+    private Boolean isVeg;
+    private String bill;
 
-    public int getCheesePrice() {
-        return cheesePrice;
-    }
+    private Boolean containCheese;
+    private Boolean containToppings;
+    private Boolean isBag;
 
-    public int getToppingPrice() {
-        return toppingPrice;
-    }
-
-    public boolean isCheeseAdded() {
-        return isCheeseAdded;
-    }
-
-    public boolean isToppingAdded() {
-        return isToppingAdded;
-    }
 
 
     public Pizza(Boolean isVeg){
         this.isVeg = isVeg;
-        this.toppingsAdder = new ToppingAdderImpl();
-        this.cheeseAdder = new CheeseAdderImpl();
-        this.billGenerator = new BillGeneratorImpl();
-        this.price = getBasePrice();
         // your code goes here
-    }
+        if(isVeg){
+            price=300;
+        }else{
+            price = 400;
+        }
+        containCheese=false;
+        containToppings= false;
+        isBag=false;
 
-    public int getBasePrice() {
-        return Boolean.TRUE.equals(isVeg) ? vegPizzaBasePrice : nonVegPizzaBasePrice;
+        this.bill="";
+        setBill("Base Price Of The Pizza: "+ price +"\n");
     }
 
     public int getPrice(){
@@ -56,33 +33,54 @@ public class Pizza {
     }
 
     public void addExtraCheese(){
-        int addCheeseprice = cheeseAdder.addCheese(isCheeseAdded);
-        price += addCheeseprice;
-        cheesePrice += addCheeseprice;
-        isCheeseAdded = true;
+        // your code goes here
+        if(!containCheese){
+            price+=80;
+            this.containCheese=true;
+            setBill("Extra Cheese Added: "+80+"\n");
+        }
+
+    }
+
+    public void setisVeg(Boolean isVeg) {
+        this.isVeg = isVeg;
+    }
+
+    public Boolean getisVeg() {
+        return isVeg;
     }
 
     public void addExtraToppings(){
-        int addToppingPrice = toppingsAdder.addToppings(isVeg, isToppingAdded);
-        price += addToppingPrice;
-        toppingPrice += addToppingPrice;
-        isToppingAdded = true;
+        // your code goes here
+        if(!containToppings){
+            if(isVeg){
+                price+=70;
+                setBill("Extra Toppings Added: 70\n");
+                this.containToppings=true;
+            }else{
+                price+=120;
+                setBill("Extra Toppings Added: 120\n");
+                this.containToppings=true;
+            }
+        }
+
     }
 
     public void addTakeaway(){
-        if(!isTakeAway) this.price += takeAwayPrice;
-        isTakeAway = true;
+        // your code goes here
+        if(!isBag){
+            this.price+=20;
+            isBag=true;
+            setBill("Paperbag Added: 20\n");
+        }
     }
 
-    public boolean isTakeAway() {
-        return isTakeAway;
+    public void setBill(String bill) {
+        this.bill+= bill;
     }
 
     public String getBill(){
-        return billGenerator.generateBill(this);
-    }
-
-    public int getTakeAwayPrice() {
-        return takeAwayPrice;
+        // your code goes her
+        return this.bill+"Total Price: "+this.price+"\n";
     }
 }
